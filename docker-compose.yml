@@ -4,16 +4,18 @@ services:
   redis:
     restart: always
     image: sameersbn/redis:latest
+    container_name: redis
     command:
     - --loglevel warning
     volumes:
-    - /srv/docker/gitlab/redis:/var/lib/redis:Z
+    - data-redis:/var/lib/redis:Z
 
   postgresql:
     restart: always
     image: sameersbn/postgresql:9.6-2
+    container_name: postgresql
     volumes:
-    - /srv/docker/gitlab/postgresql:/var/lib/postgresql:Z
+    - data-postgresql:/var/lib/postgresql:Z
     environment:
     - DB_USER=gitlab
     - DB_PASS=password
@@ -23,6 +25,7 @@ services:
   gitlab:
     restart: always
     image: sameersbn/gitlab:9.4.4
+    container_name: gitlab
     depends_on:
     - redis
     - postgresql
@@ -30,7 +33,7 @@ services:
     - "10080:80"
     - "10022:22"
     volumes:
-    - /srv/docker/gitlab/gitlab:/home/git/data:Z
+    - data-gitlab:/home/git/data:Z
     environment:
     - DEBUG=false
 
@@ -50,7 +53,7 @@ services:
     - GITLAB_HTTPS=false
     - SSL_SELF_SIGNED=false
 
-    - GITLAB_HOST=localhost
+    - GITLAB_HOST=192.168.92.133
     - GITLAB_PORT=10080
     - GITLAB_SSH_PORT=10022
     - GITLAB_RELATIVE_URL_ROOT=
@@ -148,3 +151,32 @@ services:
     - OAUTH_AZURE_API_KEY=
     - OAUTH_AZURE_API_SECRET=
     - OAUTH_AZURE_TENANT_ID=
+
+
+  gitlab-runner:
+        restart: always
+        image: gitlab/gitlab-runner:v1.1.0
+        depends_on:
+          - gitlab
+        container_name: gitlab-runner-docker
+        volumes:
+          - data-docker-sock:/var/run/docker.sock
+          - data-runner:/etc/gitlab-runner
+
+volumes:
+    data-postgresql:
+      driver: local
+    data-redis:
+      driver: local
+    data-gitlab:
+      driver: local
+    data-docker-sock:
+      driver: local
+    data-runner:
+      driver: local
+
+
+networks:
+    default:
+        external:
+            name: imdockgroup
