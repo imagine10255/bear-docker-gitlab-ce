@@ -24,7 +24,7 @@ services:
 
   gitlab:
     restart: always
-    image: sameersbn/gitlab:9.4.4
+    image: sameersbn/gitlab:latest
     container_name: gitlab
     depends_on:
     - redis
@@ -152,17 +152,6 @@ services:
     - OAUTH_AZURE_API_SECRET=
     - OAUTH_AZURE_TENANT_ID=
 
-
-  gitlab-runner:
-        restart: always
-        image: gitlab/gitlab-runner:v1.1.0
-        depends_on:
-          - gitlab
-        container_name: gitlab-runner-docker
-        volumes:
-          - data-docker-sock:/var/run/docker.sock
-          - data-runner:/etc/gitlab-runner
-
 volumes:
     data-postgresql:
       driver: local
@@ -172,9 +161,6 @@ volumes:
       driver: local
     data-docker-sock:
       driver: local
-    data-runner:
-      driver: local
-
 
 networks:
     default:
