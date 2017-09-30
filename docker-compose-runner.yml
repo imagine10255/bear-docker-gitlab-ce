@@ -1,0 +1,22 @@
+version: '2'
+
+services:
+  gitlab-runner:
+    restart: always
+    image: gitlab/gitlab-runner:latest
+    container_name: gitlab-runner-docker
+    volumes:
+      - data-docker-sock:/var/run/docker.sock
+      - data-runner:/etc/gitlab-runner
+  
+volumes:
+    data-docker-sock:
+      driver: local
+    data-runner:
+      driver: local
+
+
+networks:
+    default:
+        external:
+            name: imdockgroup
