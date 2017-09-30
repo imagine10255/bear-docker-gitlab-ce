@@ -159,8 +159,6 @@ volumes:
       driver: local
     data-gitlab:
       driver: local
-    data-docker-sock:
-      driver: local
 
 networks:
     default:

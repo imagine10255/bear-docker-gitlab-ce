@@ -6,12 +6,11 @@ services:
     image: gitlab/gitlab-runner:latest
     container_name: gitlab-runner-docker
     volumes:
-      - data-docker-sock:/var/run/docker.sock
+      - var/run/docker.sock:/var/run/docker.sock
       - data-runner:/etc/gitlab-runner
+      - ./shell:/home/gitlab-runner/shell
   
 volumes:
-    data-docker-sock:
-      driver: local
     data-runner:
       driver: local
 
