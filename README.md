@@ -71,6 +71,15 @@ $ exit
 ```
 
 
+## How to reset password by admin:
+
+How to clear all data, re init (clear volume)
+
+```
+~/imdock-gitlab-ci $ docker-compose down -v
+```
+
+
 ## How to register runner :
 
 before you need up runner
