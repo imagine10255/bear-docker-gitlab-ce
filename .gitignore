@@ -1,4 +1,4 @@
 *.gem
 *.tar.gz
 
-docker-compose.yml
+.idea

@@ -24,7 +24,7 @@ services:
 
   gitlab:
     restart: always
-    image: sameersbn/gitlab:latest
+    image: sameersbn/gitlab:9.5.5
     container_name: gitlab
     depends_on:
     - redis
@@ -34,6 +34,7 @@ services:
     - "10022:22"
     volumes:
     - data-gitlab:/home/git/data:Z
+    - ./backups:/home/git/data/backups
     environment:
     - DEBUG=false
 
@@ -53,7 +54,7 @@ services:
     - GITLAB_HTTPS=false
     - SSL_SELF_SIGNED=false
 
-    - GITLAB_HOST=192.168.92.133
+    - GITLAB_HOST=localhost
     - GITLAB_PORT=10080
     - GITLAB_SSH_PORT=10022
     - GITLAB_RELATIVE_URL_ROOT=
