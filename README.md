@@ -18,7 +18,7 @@ Gitlab-ci + Gitlab-Runner for Docker-compose
 ```
 ~/ $ git clone https://github.com/imagine10255/imdock-gitlab-ci.git
 ~/ $ cd imdock-gitlab-ci
-~/ $ vi docker-compose.yml
+~/imdock-gitlab-ci $ vi docker-compose.yml
 # change GITLAB_HOST={YOUR IP} AND GITLAB_PORT,GITLAB_SSH_PORT
 ```
 
@@ -56,14 +56,6 @@ restore before, check your container is stop ($ docker-compose down)
 Then you can start
 
 
-
-```
-~/ $
-~/ $ cd imdock-gitlab-ci
-~/imdock-gitlab-ci $ docker-compose up -d
-```
-
-
 ## How to reset password by admin:
 
 ```
@@ -81,12 +73,19 @@ $ exit
 
 ## How to register runner :
 
+before you need up runner
+
+```
+~/imdock-gitlab-ci/runner $ docker-compose up -d
+```
+
+then register runner
+
 ```
 ~ $ docker exec -it gitlab-runner-docker gitlab-runner register
 
 - key in {your-gitlab-host-setting}/ci
   ex : http://192.168.92.133:10080/ci or http://gitlab/ci
-
 - key in {your-token}
 
 - key in description (any)
