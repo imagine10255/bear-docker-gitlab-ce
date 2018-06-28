@@ -50,8 +50,10 @@ Then you can start
 restore before, check your container is stop ($ docker-compose down)
 
 ```
-~/imdock-gitlab-ci $ docker-compose run --rm gitlab app:rake gitlab:backup:restore # List available backups
+# List available backups
+~/imdock-gitlab-ci $ docker-compose run --rm gitlab app:rake gitlab:backup:restore
 ```
+<img src="./assets/img/gitlab-backup.png"/>
 
 Then you can start
 
@@ -71,7 +73,7 @@ $ exit
 ```
 
 
-## How to reset password by admin:
+## How to reset init:
 
 How to clear all data, re init (clear volume)
 
