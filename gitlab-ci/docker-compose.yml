@@ -3,7 +3,11 @@ version: '2'
 services:
   redis:
     restart: always
-    image: sameersbn/redis:latest
+#    image: sameersbn/redis:latest
+    image: imagine10255/redis:4.0.9
+    build:
+      context: ./dockerfile
+      dockerfile: Dockerfile-Redis
     command:
     - --loglevel warning
     volumes:
@@ -11,7 +15,11 @@ services:
 
   postgresql:
     restart: always
-    image: sameersbn/postgresql:9.6-2
+#    image: sameersbn/postgresql:9.6-2
+    image: imagine10255/postgresql:9.6-2
+    build:
+      context: ./dockerfile
+      dockerfile: Dockerfile-Postgresql
     volumes:
     - data-postgresql:/var/lib/postgresql:Z
     environment:
@@ -22,7 +30,11 @@ services:
 
   gitlab:
     restart: always
-    image: sameersbn/gitlab:9.5.5
+#    image: sameersbn/gitlab:9.5.5
+    image: imagine10255/gitlab:9.5.5
+    build:
+      context: ./dockerfile
+      dockerfile: Dockerfile-gitlab
     depends_on:
     - redis
     - postgresql
@@ -45,8 +57,8 @@ services:
     - REDIS_HOST=redis
     - REDIS_PORT=6379
 
-    - TZ=Asia/Kolkata
-    - GITLAB_TIMEZONE=Kolkata
+    - TZ=Asia/Taipei
+    - GITLAB_TIMEZONE=Taipei
 
     - GITLAB_HTTPS=false
     - SSL_SELF_SIGNED=false

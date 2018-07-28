@@ -94,7 +94,10 @@ then register runner
 
 ```
 ~ $ docker exec -it gitlab-runner-docker gitlab-runner register
+# or
+~ $ docker exec -it gitlab-runner-docker sh /home/gitlab-runner/shell/node-runner.sh
 
+# qa
 - key in {your-gitlab-host-setting}/ci
   ex : http://192.168.92.133:10080/ci or http://gitlab/ci
 - key in {your-token}
