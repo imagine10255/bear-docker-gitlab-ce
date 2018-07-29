@@ -49,11 +49,11 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv E1DD270288B4E60
  && gem install --no-document bundler \
  && rm -rf /var/lib/apt/lists/*
 
-COPY ../../../../../Downloads/docker-gitlab-9.5.5/assets/build ${GITLAB_BUILD_DIR}/
+COPY ./assets/build ${GITLAB_BUILD_DIR}/
 RUN bash ${GITLAB_BUILD_DIR}/install.sh
 
-COPY ../../../../../Downloads/docker-gitlab-9.5.5/assets/runtime ${GITLAB_RUNTIME_DIR}/
-COPY ../../../../../Downloads/docker-gitlab-9.5.5/entrypoint.sh /sbin/entrypoint.sh
+COPY ./assets/runtime ${GITLAB_RUNTIME_DIR}/
+COPY ./entrypoint.sh /sbin/entrypoint.sh
 RUN chmod 755 /sbin/entrypoint.sh
 
 EXPOSE 22/tcp 80/tcp 443/tcp
