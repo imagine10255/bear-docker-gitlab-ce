@@ -5,9 +5,9 @@ services:
     restart: always
 #    image: sameersbn/redis:latest
     image: imagine10255/gitlab-redis:4.0.9
-    build:
-      context: ./source/redis-4.0.9-1
-      dockerfile: Dockerfile
+#    build:
+#      context: ./source/redis-4.0.9-1
+#      dockerfile: Dockerfile
     command:
     - --loglevel warning
     volumes:
@@ -17,9 +17,9 @@ services:
     restart: always
 #    image: sameersbn/postgresql:9.6-2
     image: imagine10255/gitlab-postgresql:9.6-2
-    build:
-      context: ./source/postgresql-9.6-2
-      dockerfile: Dockerfile
+#    build:
+#      context: ./source/postgresql-9.6-2
+#      dockerfile: Dockerfile
     volumes:
     - data-postgresql:/var/lib/postgresql:Z
     environment:
@@ -40,7 +40,7 @@ services:
     - "10022:22"
     volumes:
     - data-gitlab:/home/git/data:Z
-    - ./backups:/home/git/data/backups
+#    - ./backups:/home/git/data/backups
     environment:
     - DEBUG=false
 
