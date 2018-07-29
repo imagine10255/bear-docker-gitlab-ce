@@ -6,8 +6,8 @@ services:
 #    image: sameersbn/redis:latest
     image: imagine10255/redis:4.0.9
     build:
-      context: ./dockerfile
-      dockerfile: Dockerfile-Redis
+      context: ./source/redis-4.0.9-1
+      dockerfile: Dockerfile
     command:
     - --loglevel warning
     volumes:
@@ -18,8 +18,8 @@ services:
 #    image: sameersbn/postgresql:9.6-2
     image: imagine10255/postgresql:9.6-2
     build:
-      context: ./dockerfile
-      dockerfile: Dockerfile-Postgresql
+      context: ./source/postgresql-9.6-2
+      dockerfile: Dockerfile
     volumes:
     - data-postgresql:/var/lib/postgresql:Z
     environment:
@@ -33,8 +33,8 @@ services:
 #    image: sameersbn/gitlab:9.5.5
     image: imagine10255/gitlab:9.5.5
     build:
-      context: ./dockerfile
-      dockerfile: Dockerfile-gitlab
+      context: ./source/gitlab-9.5.5
+      dockerfile: Dockerfile
     depends_on:
     - redis
     - postgresql
