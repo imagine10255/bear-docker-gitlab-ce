@@ -40,7 +40,7 @@ services:
     - "10022:22"
     volumes:
     - data-gitlab:/home/git/data:Z
-#    - ./backups:/home/git/data/backups
+    - ./backups:/home/git/data/backups
     environment:
     - DEBUG=false
 
