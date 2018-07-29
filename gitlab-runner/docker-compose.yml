@@ -4,10 +4,10 @@ services:
   gitlab-runner:
     restart: always
 #    image: gitlab/gitlab-runner:latest
-    image: imagine10255/postgresql:9.6-2
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: imagine10255/gitlab-runner:1.5.3
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
     container_name: gitlab-runner-docker
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
