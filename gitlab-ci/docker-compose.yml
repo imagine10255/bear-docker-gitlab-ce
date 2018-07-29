@@ -30,11 +30,7 @@ services:
 
   gitlab:
     restart: always
-#    image: sameersbn/gitlab:9.5.5
-    image: imagine10255/gitlab:9.5.5
-    build:
-      context: ./source/gitlab-9.5.5
-      dockerfile: Dockerfile
+    image: sameersbn/gitlab:9.5.5
     depends_on:
     - redis
     - postgresql
