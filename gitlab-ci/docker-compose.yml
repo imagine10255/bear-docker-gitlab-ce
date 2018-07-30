@@ -8,6 +8,7 @@ services:
 #    build:
 #      context: ./source/redis-4.0.9-1
 #      dockerfile: Dockerfile
+    container_name: imdock-gitlab-ci-redis
     command:
     - --loglevel warning
     volumes:
@@ -20,6 +21,7 @@ services:
 #    build:
 #      context: ./source/postgresql-9.6-2
 #      dockerfile: Dockerfile
+    container_name: imdock-gitlab-ci-postgresql
     volumes:
     - data-postgresql:/var/lib/postgresql:Z
     environment:
@@ -32,6 +34,7 @@ services:
     restart: always
 #    image: sameersbn/gitlab:9.5.5
     image: imagine10255/gitlab-ci:9.5.5
+    container_name: imdock-gitlab-ci-gitlab
     depends_on:
     - redis
     - postgresql
