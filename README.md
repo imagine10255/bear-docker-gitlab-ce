@@ -1,48 +1,47 @@
-imdock-gitlab-ci
+bear-docker-gitlab-ce
 ====================================================
 
 ## What's this:
 
-Gitlab-ci + Gitlab-Runner for Docker-compose
+Gitlab-ce + Gitlab-Runner for docker-compose
 
 
 ## How to and other docker-compose use the same network :
 
 ```
 #if you not have group network, you can create this, and other docker-compose use this network setting
-~ $ docker network create --driver bridge imdockgroup
+~ $ docker network create --driver bridge servicegroup
 ```
 
 ## How to start gitlab :
 
 ```
-~/ $ git clone https://github.com/imagine10255/imdock-gitlab-ci.git
-~/ $ cd imdock-gitlab-ci
-~/imdock-gitlab-ci $ vi docker-compose.yml
-# change GITLAB_HOST={YOUR IP} AND GITLAB_PORT,GITLAB_SSH_PORT
-```
+~/ $ git clone https://github.com/imagine10255/bear-docker-gitlab-ce gitlab
+~/ $ cd gitlab
+~/gitlab $ vi docker-compose.yml
 
 ```
-~/imdock-gitlab-ci $ docker-compose up -d
+change your setting
+
+```
+~/gitlab $ docker-compose up -d
+```
+
+check root password
+```
+docker exec -it gitlab grep 'Password:' /etc/gitlab/initial_root_password
 ```
 
 ## How to backup gitlab :
 
-default backup dir in container path [/home/git/data    /backups]
-
-backup time by GITLAB_BACKUP_TIME
-
-in docker-compose.yml has set volumes: [./backups:/home/git/data/backups]
-
-
-backup before, check your container is stop ($ docker-compose down)
-
 ```
-~/imdock-gitlab-ci $ docker-compose run --rm gitlab app:rake gitlab:backup:create
+$ crontab -e
+
+# backup gitlab
+30 01 * * * /bin/sh /home/{your_username}}/gitlab/auto_backup.sh > /home/{your_username}/services/gitlab/cronlog.txt 2>&1
 ```
 
-Then you can start
-
+path: `/mnt/volume_sgp1_01/gitlab/data`
 
 
 ## How to restore
@@ -51,7 +50,7 @@ restore before, check your container is stop ($ docker-compose down)
 
 ```
 # List available backups
-~/imdock-gitlab-ci $ docker-compose run --rm gitlab app:rake gitlab:backup:restore
+~/gitlab $ docker-compose run --rm gitlab app:rake gitlab:backup:restore
 ```
 <img src="./assets/img/gitlab-backup.png"/>
 

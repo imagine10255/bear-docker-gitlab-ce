@@ -1,0 +1,20 @@
+version: '3.4'
+
+services:
+  gitlab-runner:
+    restart: always
+    image: gitlab/gitlab-runner:latest
+    container_name: gitlab-runner
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - data-runner:/etc/gitlab-runner
+
+volumes:
+  data-runner:
+    driver: local
+
+
+networks:
+  default:
+    external:
+      name: servicegroup

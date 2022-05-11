@@ -1,0 +1,92 @@
+version: '3.6'
+services:
+  web:
+    image: 'gitlab/gitlab-ce:latest'
+    restart: always
+    container_name: 'gitlab'
+    hostname: 'github.bearests.com'
+    privileged: true
+    environment:
+      TZ: Asia/Taipei
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://github.bearests.com'
+        # Add any other gitlab.rb configuration here, each on its own line
+        gitlab_rails['gitlab_shell_ssh_port'] = 8022
+        
+        gitlab_rails['time_zone'] = 'Asia/Taipei'
+        # 關閉電子郵件相關功能
+        gitlab_rails['smtp_enable'] = false
+        gitlab_rails['gitlab_email_enabled'] = false
+        gitlab_rails['incoming_email_enabled'] = false
+
+        # Terraform
+        gitlab_rails['terraform_state_enabled'] = false
+
+
+        # Usage Statistics
+        gitlab_rails['usage_ping_enabled'] = false
+        gitlab_rails['sentry_enabled'] = false
+        grafana['reporting_enabled'] = false
+
+        # 關閉容器倉庫功能
+        gitlab_rails['gitlab_default_projects_features_container_registry'] = false
+        gitlab_rails['registry_enabled'] = false
+        registry['enable'] = false
+        registry_nginx['enable'] = false
+
+        # 包倉庫
+        gitlab_rails['packages_enabled'] = false
+        gitlab_rails['dependency_proxy_enabled'] = false
+
+        # GitLab KAS
+        gitlab_kas['enable'] = false
+        gitlab_rails['gitlab_kas_enabled'] = false
+
+        # Mattermost
+        mattermost['enable'] = false
+        mattermost_nginx['enable'] = false
+
+        # Kerberos
+        gitlab_rails['kerberos_enabled'] = false
+        sentinel['enable'] = false
+
+        # GitLab Pages
+        gitlab_pages['enable'] = false
+        pages_nginx['enable'] = false
+
+        # 禁用 PUMA 叢集模式
+        puma['worker_processes'] = 0
+        puma['min_threads'] = 1
+        puma['max_threads'] = 2
+
+        # 降低後臺守護程序併發數
+        sidekiq['max_concurrency'] = 5
+
+        gitlab_ci['gitlab_ci_all_broken_builds'] = false
+        gitlab_ci['gitlab_ci_add_pusher'] = false
+
+        # 關閉監控
+        prometheus_monitoring['enable'] = false
+        alertmanager['enable'] = false
+        node_exporter['enable'] = false
+        redis_exporter['enable'] = false
+        postgres_exporter['enable'] = false
+        pgbouncer_exporter['enable'] = false
+        gitlab_exporter['enable'] = false
+        grafana['enable'] = false
+        sidekiq['metrics_enabled'] = false
+    ports:
+      - '8080:80'
+      - '8443:443'
+      - '8022:22'
+    volumes:
+      - '/mnt/volume_sgp1_01/gitlab/config:/etc/gitlab'
+      - '/mnt/volume_sgp1_01/gitlab/logs:/var/log/gitlab'
+      - '/mnt/volume_sgp1_01/gitlab/data:/var/opt/gitlab'
+    shm_size: '256m'
+
+
+networks:
+  default:
+    external:
+      name: servicegroup
