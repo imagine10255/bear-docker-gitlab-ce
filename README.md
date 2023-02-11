@@ -24,7 +24,7 @@ Gitlab-ce + Gitlab-Runner for docker-compose
 Change your domain in `./docker-compose.yml`
 
 
-Create your ssl cert
+Create your ssl cert (not use cloudflare proxy ssl)
 ```bash
 # change your domain in ./create_cert.sh
 $ sh create_cert.sh 
