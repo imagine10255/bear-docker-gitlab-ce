@@ -31,13 +31,13 @@ services:
         grafana['reporting_enabled'] = false
 
         # Web Service SSL
-        nginx['ssl_certificate'] = "/etc/gitlab/ssl/letsencrypt/gitlab.example.com/live/fullchain.pem"
-        nginx['ssl_certificate_key'] = "/etc/gitlab/ssl/letsencrypt/gitlab.example.com/live/privkey.pem"
+        nginx['ssl_certificate'] = "/etc/gitlab/ssl/letsencrypt/live/gitlab.example.com/fullchain.pem"
+        nginx['ssl_certificate_key'] = "/etc/gitlab/ssl/letsencrypt/live/gitlab.example.com/privkey.pem"
 
         # 容器倉庫功能
         registry_external_url 'https://gitlab.example.com:5050'
-        registry_nginx['ssl_certificate'] = "/etc/gitlab/ssl/letsencrypt/gitlab.example.com/live/fullchain.pem"
-        registry_nginx['ssl_certificate_key'] = "/etc/gitlab/ssl/letsencrypt/gitlab.example.com/live/privkey.pem"
+        registry_nginx['ssl_certificate'] = "/etc/gitlab/ssl/letsencrypt/live/gitlab.example.com/fullchain.pem"
+        registry_nginx['ssl_certificate_key'] = "/etc/gitlab/ssl/letsencrypt/live/gitlab.example.com/privkey.pem"
         registry_nginx['redirect_http_to_https'] = true
         registry_nginx['listen_port'] = 5050
 
@@ -94,15 +94,6 @@ services:
       - '/mnt/volume_sgp1_01/gitlab/registry:/var/opt/gitlab/gitlab-rails/shared/registry'
     shm_size: '256m'
 
-
-  verify-ssl-site:
-      restart: "no"
-      image: nginx
-      volumes:
-        - "./html:/usr/share/nginx/html"
-      ports:
-        - "80:80"
-      command: [nginx-debug, '-g', 'daemon off;']
 
 networks:
   default:
