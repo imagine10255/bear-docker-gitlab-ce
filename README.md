@@ -10,7 +10,7 @@ Gitlab-ce + Gitlab-Runner for docker-compose
 
 ```
 #if you not have group network, you can create this, and other docker-compose use this network setting
-~ $ docker network create --driver bridge servicegroup
+~ $ docker network create --driver bridge service_group
 ```
 
 ## How to start gitlab :
@@ -21,15 +21,30 @@ Gitlab-ce + Gitlab-Runner for docker-compose
 ~/gitlab $ vi docker-compose.yml
 
 ```
-change your setting
+Change your setting
+
+Create your ssl cert
+
 
 ```
 ~/gitlab $ docker-compose up -d
 ```
 
-check root password
+Check root password
 ```
 docker exec -it gitlab grep 'Password:' /etc/gitlab/initial_root_password
+```
+
+## How reset root password
+
+```bash
+$ docker ps
+$ docker exec -it gitlab bash <= that is my container name in step 1
+$ gitlab-rails console -e production <= wait, minutes for another prompt to come
+$ user = User.where(id: 1).first
+$ user.password = 'secret_pass' <= use your favorite password
+$ user.password_confirmation = 'secret_pass' <= again
+$ user.save! <= save user
 ```
 
 ## How to backup gitlab :
@@ -52,7 +67,7 @@ restore before, check your container is stop ($ docker-compose down)
 # List available backups
 ~/gitlab $ docker-compose run --rm gitlab app:rake gitlab:backup:restore
 ```
-<img src="./assets/img/gitlab-backup.png"/>
+<img src="./assets/gitlab-backup.webp"/>
 
 Then you can start
 
@@ -110,3 +125,9 @@ then register runner
 ```
 
 got to the setting/pipelines check
+
+
+## Ref
+- [GitLab CI 上傳 Image 到 Google Container Registry](https://ithelp.ithome.com.tw/articles/10266998)
+- [Update: Using Free Let’s Encrypt SSL/TLS Certificates with NGINX](https://www.nginx.com/blog/using-free-ssltls-certificates-from-lets-encrypt-with-nginx/)
+- [攻略docker版Let's Encrypt憑證申請](https://www.ccc.tc/article/letsencrypt)

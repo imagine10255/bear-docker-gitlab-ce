@@ -5,7 +5,7 @@ DOCKER="$(which docker)"
 EXEC="exec -it gitlab-runner"
 
 # RUNNER REG SETTING
-GITLAB_URL="http://github.bearests.com"
+GITLAB_URL="http://gitlab.example.com"
 RUNNER_NAME="bear-react-carousel-v3/runner1"
 REGISTRATION_TOKEN="GR1348941oBQz577PRKsstQzhBtLv"
 

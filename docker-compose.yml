@@ -3,17 +3,19 @@ services:
   web:
     image: 'gitlab/gitlab-ce:latest'
     restart: always
-    container_name: 'gitlab'
-    hostname: 'github.bearests.com'
+    container_name: gitlab
+    hostname: 'gitlab.example.com'
     privileged: true
     environment:
-      TZ: Asia/Taipei
+      TZ: Asia/Taipei      
       GITLAB_OMNIBUS_CONFIG: |
-        external_url 'http://github.bearests.com'
+        external_url 'https://gitlab.example.com:8443'
+
         # Add any other gitlab.rb configuration here, each on its own line
         gitlab_rails['gitlab_shell_ssh_port'] = 8022
         
         gitlab_rails['time_zone'] = 'Asia/Taipei'
+        
         # 關閉電子郵件相關功能
         gitlab_rails['smtp_enable'] = false
         gitlab_rails['gitlab_email_enabled'] = false
@@ -28,15 +30,20 @@ services:
         gitlab_rails['sentry_enabled'] = false
         grafana['reporting_enabled'] = false
 
-        # 關閉容器倉庫功能
-        gitlab_rails['gitlab_default_projects_features_container_registry'] = false
-        gitlab_rails['registry_enabled'] = false
-        registry['enable'] = false
-        registry_nginx['enable'] = false
+        # Web Service SSL
+        nginx['ssl_certificate'] = "/etc/gitlab/ssl/letsencrypt/gitlab.example.com/live/fullchain.pem"
+        nginx['ssl_certificate_key'] = "/etc/gitlab/ssl/letsencrypt/gitlab.example.com/live/privkey.pem"
+
+        # 容器倉庫功能
+        registry_external_url 'https://gitlab.example.com:5050'
+        registry_nginx['ssl_certificate'] = "/etc/gitlab/ssl/letsencrypt/gitlab.example.com/live/fullchain.pem"
+        registry_nginx['ssl_certificate_key'] = "/etc/gitlab/ssl/letsencrypt/gitlab.example.com/live/privkey.pem"
+        registry_nginx['redirect_http_to_https'] = true
+        registry_nginx['listen_port'] = 5050
 
         # 包倉庫
-        gitlab_rails['packages_enabled'] = false
-        gitlab_rails['dependency_proxy_enabled'] = false
+        gitlab_rails['packages_enabled'] = true
+        gitlab_rails['dependency_proxy_enabled'] = true
 
         # GitLab KAS
         gitlab_kas['enable'] = false
@@ -77,16 +84,27 @@ services:
         sidekiq['metrics_enabled'] = false
     ports:
       - '8080:80'
-      - '8443:443'
+      - '8443:8443'
       - '8022:22'
+      - '5050:5050'
     volumes:
       - '/mnt/volume_sgp1_01/gitlab/config:/etc/gitlab'
       - '/mnt/volume_sgp1_01/gitlab/logs:/var/log/gitlab'
       - '/mnt/volume_sgp1_01/gitlab/data:/var/opt/gitlab'
+      - '/mnt/volume_sgp1_01/gitlab/registry:/var/opt/gitlab/gitlab-rails/shared/registry'
     shm_size: '256m'
 
+
+  verify-ssl-site:
+      restart: "no"
+      image: nginx
+      volumes:
+        - "./html:/usr/share/nginx/html"
+      ports:
+        - "80:80"
+      command: [nginx-debug, '-g', 'daemon off;']
 
 networks:
   default:
     external:
-      name: servicegroup
+      name: service_group
