@@ -1,0 +1,77 @@
+stages:
+  - build
+  - deploy
+
+
+variables:
+  DOCKER_VERSION: 18.09.0
+  DOCKER_DRIVER: overlay2
+
+
+build:
+  stage: build
+  image: docker:${DOCKER_VERSION}
+  services:
+    - docker:${DOCKER_VERSION}-dind
+  variables:
+    PUBLIC_URL: "/"
+    TARGET_IMAGE_CURRENT: "${CI_REGISTRY}/${CI_PROJECT_PATH}:${CI_COMMIT_TAG}"
+    TARGET_IMAGE_LAST: ""
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^v(.*)-beta.(.*)/
+      variables:
+        TARGET_IMAGE_LAST: "${CI_REGISTRY}/${CI_PROJECT_PATH}:beta"
+    - if: $CI_COMMIT_TAG =~ /^v([\d]*).([\d]*).([\d]*)$/
+      variables:
+        TARGET_IMAGE_LAST: "${CI_REGISTRY}/${CI_PROJECT_PATH}:latest"
+  before_script:
+    - echo "arg publicUrl is '${PUBLIC_URL}'"
+    - echo "job build current to '${TARGET_IMAGE_CURRENT}'"
+    - echo "job build latest to '${TARGET_IMAGE_LAST}'"
+    - echo "${CI_DEPLOY_PASSWORD}" | docker login ${CI_REGISTRY} -u ${CI_DEPLOY_USER} --password-stdin
+  script:
+    - docker build -t ${TARGET_IMAGE_CURRENT} --build-arg PUBLIC_URL=${PUBLIC_URL} .
+    - docker tag ${TARGET_IMAGE_CURRENT} ${TARGET_IMAGE_LAST}
+    - docker push ${TARGET_IMAGE_CURRENT}
+    - docker push ${TARGET_IMAGE_LAST}
+
+
+deploy-code:
+  stage: deploy
+  variables:
+    DEPLOY_SSH_URL: "192.168.0.155"
+    DEPLOY_SSH_PORT: "16022"
+    DEPLOY_USERNAME: "deploy_user"
+    DEPLOY_SSH_PRIVATE_KEY: ${DEPLOY_SSH_PRIVATE_KEY_DEV}
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^v(.*)-beta.(.*)/
+  before_script:
+    - echo "arg SSH_URL is '${DEPLOY_USERNAME}@${DEPLOY_SSH_URL}:${DEPLOY_SSH_PORT}', UPDATE_PATH is '${DEPLOY_UPDATE_PATH}'"
+    #    - echo "DEPLOY_SSH_PRIVATE_KEY is '${DEPLOY_SSH_PRIVATE_KEY}'"
+    - apk update && apk add bash && apk add openssh-client
+    - eval $(ssh-agent -s)
+    - echo "${DEPLOY_SSH_PRIVATE_KEY}" | ssh-add -
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+  script:
+    - UPDATE_SCRIPT=$(echo "cd /home/deploy_user/site-dev && sh ./runner-deploy.sh member-platform")
+    - echo ${UPDATE_SCRIPT} | ssh ${DEPLOY_USERNAME}@${DEPLOY_SSH_URL} -p${DEPLOY_SSH_PORT}
+    - UPDATE_SCRIPT=$(echo "cd /home/deploy_user/site-prod && sh ./runner-deploy.sh member-platform")
+    - echo ${UPDATE_SCRIPT} | ssh ${DEPLOY_USERNAME}@${DEPLOY_SSH_URL} -p${DEPLOY_SSH_PORT}
+
+
+#
+#deploy-asset:
+#  stage: deploy
+#  variables:
+#    FTP_HOST: "192.168.0.82"
+#    FTP_PORT: "16021"
+#    FTP_USERNAME: ""
+#    FTP_PASSWOR: ""
+#  rules:
+#    - if: $CI_COMMIT_TAG =~ /^v([\d]*).([\d]*).([\d]*)$/
+#  before_script:
+#    - apk --update add lftp ncftp
+#  script:
+#    - UPDATE_SCRIPT=$(echo "mirror -e -R -p ./public/static /accessory/member-static")
+#    - lftp -p ${FTP_PORT} -u ${FTP_USERNAME},${FTP_PASSWOR} ${FTP_HOST} -e "${UPDATE_SCRIPT} ; quit"

@@ -8,30 +8,34 @@ Gitlab-ce + Gitlab-Runner for docker-compose
 
 ## How to and other docker-compose use the same network :
 
-```
+```bash
 #if you not have group network, you can create this, and other docker-compose use this network setting
 ~ $ docker network create --driver bridge service_group
 ```
 
 ## How to start gitlab :
 
-```
+```bash
 ~/ $ git clone https://github.com/imagine10255/bear-docker-gitlab-ce gitlab
 ~/ $ cd gitlab
 ~/gitlab $ vi docker-compose.yml
 
 ```
-Change your setting
+Change your domain in `./docker-compose.yml`
+
 
 Create your ssl cert
-
-
+```bash
+# change your domain in ./create_cert.sh
+$ sh create_cert.sh 
 ```
+
+```bash
 ~/gitlab $ docker-compose up -d
 ```
 
 Check root password
-```
+```bash
 docker exec -it gitlab grep 'Password:' /etc/gitlab/initial_root_password
 ```
 
@@ -49,7 +53,7 @@ $ user.save! <= save user
 
 ## How to backup gitlab :
 
-```
+```bash
 $ crontab -e
 
 # backup gitlab
@@ -63,7 +67,7 @@ path: `/mnt/volume_sgp1_01/gitlab/data`
 
 restore before, check your container is stop ($ docker-compose down)
 
-```
+```bash
 # List available backups
 ~/gitlab $ docker-compose run --rm gitlab app:rake gitlab:backup:restore
 ```
@@ -74,7 +78,7 @@ Then you can start
 
 ## How to reset password by admin:
 
-```
+```bash
 $ docker exec -it {your_gitlab_contanier_id} /bin/bash
 $ su - git
 $ cd gitlab
@@ -91,40 +95,10 @@ $ exit
 
 How to clear all data, re init (clear volume)
 
-```
+```bash
 ~/imdock-gitlab-ci $ docker-compose down -v
 ```
 
-
-## How to register runner :
-
-before you need up runner
-
-```
-~/imdock-gitlab-ci/runner $ docker-compose up -d
-```
-
-then register runner
-
-```
-~ $ docker exec -it gitlab-runner-docker gitlab-runner register
-# or
-~ $ docker exec -it gitlab-runner-docker sh /home/gitlab-runner/shell/node-runner.sh
-
-# qa
-- key in {your-gitlab-host-setting}/ci
-  ex : http://192.168.92.133:10080/ci or http://gitlab/ci
-- key in {your-token}
-
-- key in description (any)
-
-- key in tag (any)
-
-- key in executor
-  ex : shell
-```
-
-got to the setting/pipelines check
 
 
 ## Ref
