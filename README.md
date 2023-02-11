@@ -13,7 +13,7 @@ Gitlab-ce + Gitlab-Runner for docker-compose
 ~ $ docker network create --driver bridge service_group
 ```
 
-## How to start gitlab :
+## How to start:
 
 ```bash
 ~/ $ git clone https://github.com/imagine10255/bear-docker-gitlab-ce gitlab
@@ -39,7 +39,7 @@ Check root password
 docker exec -it gitlab grep 'Password:' /etc/gitlab/initial_root_password
 ```
 
-## How reset root password
+## How reset admin password
 
 ```bash
 $ docker ps
@@ -51,44 +51,6 @@ $ user.password_confirmation = 'secret_pass' <= again
 $ user.save! <= save user
 ```
 
-## How to backup gitlab :
-
-```bash
-$ crontab -e
-
-# backup gitlab
-30 01 * * * /bin/sh /home/{your_username}}/gitlab/auto_backup.sh > /home/{your_username}/services/gitlab/cronlog.txt 2>&1
-```
-
-path: `/mnt/volume_sgp1_01/gitlab/data`
-
-
-## How to restore
-
-restore before, check your container is stop ($ docker-compose down)
-
-```bash
-# List available backups
-~/gitlab $ docker-compose run --rm gitlab app:rake gitlab:backup:restore
-```
-<img src="./assets/gitlab-backup.webp"/>
-
-Then you can start
-
-
-## How to reset password by admin:
-
-```bash
-$ docker exec -it {your_gitlab_contanier_id} /bin/bash
-$ su - git
-$ cd gitlab
-$ bundle exec rails c production
-$ user = User.where(id: 1).first
-$ user.password = 'NEW_PASS'
-$ user.password_confirmation = 'NEW_PASS'
-$ user.save
-$ exit
-```
 
 
 ## How to reset init:
