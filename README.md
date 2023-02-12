@@ -1,6 +1,9 @@
 bear-docker-gitlab-ce
 ====================================================
 
+
+<img src="./assets/dev_ops.webp"/>
+
 ## What's this:
 
 Gitlab-ce + Gitlab-Runner for docker-compose
