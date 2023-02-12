@@ -39,31 +39,10 @@ Check root password
 docker exec -it gitlab grep 'Password:' /etc/gitlab/initial_root_password
 ```
 
-## How reset admin password
-
-```bash
-$ docker ps
-$ docker exec -it gitlab bash <= that is my container name in step 1
-$ gitlab-rails console -e production <= wait, minutes for another prompt to come
-$ user = User.where(id: 1).first
-$ user.password = 'secret_pass' <= use your favorite password
-$ user.password_confirmation = 'secret_pass' <= again
-$ user.save! <= save user
-```
-
-
-
-## How to reset init:
-
-How to clear all data, re init (clear volume)
-
-```bash
-~/imdock-gitlab-ci $ docker-compose down -v
-```
-
 
 
 ## Ref
 - [GitLab CI 上傳 Image 到 Google Container Registry](https://ithelp.ithome.com.tw/articles/10266998)
 - [Update: Using Free Let’s Encrypt SSL/TLS Certificates with NGINX](https://www.nginx.com/blog/using-free-ssltls-certificates-from-lets-encrypt-with-nginx/)
 - [攻略docker版Let's Encrypt憑證申請](https://www.ccc.tc/article/letsencrypt)
+- [docker-gitlab 與 container registry](https://blog.elleryq.idv.tw/2017/12/docker-gitlab-container-registry.html)
