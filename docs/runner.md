@@ -1,4 +1,4 @@
-# Gitlab CI/CD
+# Gitlab Runner
 
 
 ## How to register runner :
@@ -10,6 +10,9 @@
 ```
 
 2. then register runner
+
+<img src="../assets/ci_runner.webp"/>
+
 
 2.1. use sample sh script
 

@@ -1,3 +1,5 @@
+# Gitlab Backup & Restore
+
 ## How to backup gitlab :
 
 ```bash
@@ -18,6 +20,6 @@ restore before, check your container is stop ($ docker-compose down)
 # List available backups
 ~/gitlab $ docker-compose run --rm gitlab app:rake gitlab:backup:restore
 ```
-<img src="../assets/gitlab-backup.webp"/>
+<img src="../assets/backup.webp"/>
 
 Then you can start
