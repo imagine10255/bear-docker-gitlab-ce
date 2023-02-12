@@ -11,7 +11,7 @@
 
 2. then register runner
 
-<img src="../assets/ci_runner.webp"/>
+<img src="../assets/ci_runner.webp" height="500"/>
 
 
 2.1. use sample sh script
