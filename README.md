@@ -2,7 +2,7 @@ bear-docker-gitlab-ce
 ====================================================
 
 
-<img src="./assets/dev_ops.webp"/>
+<img src="./assets/dev_ops.webp" height="350"/>
 
 ## What's this:
 
